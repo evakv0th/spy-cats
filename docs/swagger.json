@@ -1,0 +1,883 @@
+{
+    "swagger": "2.0",
+    "info": {
+        "description": "A mission management system for spy cats",
+        "title": "Spy Cats API",
+        "termsOfService": "http://swagger.io/terms/",
+        "contact": {
+            "name": "API Support",
+            "url": "http://www.swagger.io/support",
+            "email": "support@swagger.io"
+        },
+        "license": {
+            "name": "MIT",
+            "url": "http://opensource.org/licenses/MIT"
+        },
+        "version": "1.0"
+    },
+    "host": "localhost:8080",
+    "basePath": "/api",
+    "paths": {
+        "/cats": {
+            "get": {
+                "description": "Get a list of all spy cats in the system",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "cats"
+                ],
+                "summary": "List all spy cats",
+                "responses": {
+                    "200": {
+                        "description": "List of cats",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/cats.Cat"
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Internal server error",
+                        "schema": {
+                            "type": "object",
+                            "additionalProperties": {
+                                "type": "string"
+                            }
+                        }
+                    }
+                }
+            },
+            "post": {
+                "description": "Create a new spy cat with the provided information",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "cats"
+                ],
+                "summary": "Create a spy cat",
+                "parameters": [
+                    {
+                        "description": "Cat information",
+                        "name": "cat",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/cats.CreateCatRequest"
+                        }
+                    }
+                ],
+                "responses": {
+                    "201": {
+                        "description": "Successfully created cat",
+                        "schema": {
+                            "type": "object",
+                            "additionalProperties": {
+                                "type": "integer",
+                                "format": "int64"
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Invalid input",
+                        "schema": {
+                            "type": "object",
+                            "additionalProperties": {
+                                "type": "string"
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/cats/{id}": {
+            "get": {
+                "description": "Get a spy cat by its ID",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "cats"
+                ],
+                "summary": "Get a spy cat",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "Cat ID",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Cat information",
+                        "schema": {
+                            "$ref": "#/definitions/cats.Cat"
+                        }
+                    },
+                    "404": {
+                        "description": "Cat not found",
+                        "schema": {
+                            "type": "object",
+                            "additionalProperties": {
+                                "type": "string"
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Internal server error",
+                        "schema": {
+                            "type": "object",
+                            "additionalProperties": {
+                                "type": "string"
+                            }
+                        }
+                    }
+                }
+            },
+            "delete": {
+                "description": "Delete a spy cat by its ID",
+                "tags": [
+                    "cats"
+                ],
+                "summary": "Delete a spy cat",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "Cat ID",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Cat deleted successfully",
+                        "schema": {
+                            "type": "object",
+                            "additionalProperties": {
+                                "type": "string"
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Internal server error",
+                        "schema": {
+                            "type": "object",
+                            "additionalProperties": {
+                                "type": "string"
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/cats/{id}/salary": {
+            "patch": {
+                "description": "Update the salary of a specific spy cat",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "cats"
+                ],
+                "summary": "Update cat salary",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "Cat ID",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "description": "New salary information",
+                        "name": "salary",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/cats.UpdateSalaryRequest"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Salary updated successfully",
+                        "schema": {
+                            "type": "object",
+                            "additionalProperties": {
+                                "type": "string"
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Invalid input",
+                        "schema": {
+                            "type": "object",
+                            "additionalProperties": {
+                                "type": "string"
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Cat not found",
+                        "schema": {
+                            "type": "object",
+                            "additionalProperties": {
+                                "type": "string"
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Internal server error",
+                        "schema": {
+                            "type": "object",
+                            "additionalProperties": {
+                                "type": "string"
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/missions": {
+            "get": {
+                "description": "Get a list of all missions in the system",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "missions"
+                ],
+                "summary": "List all missions",
+                "responses": {
+                    "200": {
+                        "description": "List of missions",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/missions.Mission"
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Internal server error",
+                        "schema": {
+                            "type": "object",
+                            "additionalProperties": {
+                                "type": "string"
+                            }
+                        }
+                    }
+                }
+            },
+            "post": {
+                "description": "Create a new mission with targets",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "missions"
+                ],
+                "summary": "Create a mission",
+                "parameters": [
+                    {
+                        "description": "Mission information",
+                        "name": "mission",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/missions.CreateMissionRequest"
+                        }
+                    }
+                ],
+                "responses": {
+                    "201": {
+                        "description": "Successfully created mission",
+                        "schema": {
+                            "$ref": "#/definitions/missions.Mission"
+                        }
+                    },
+                    "400": {
+                        "description": "Invalid input",
+                        "schema": {
+                            "type": "object",
+                            "additionalProperties": {
+                                "type": "string"
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Internal server error",
+                        "schema": {
+                            "type": "object",
+                            "additionalProperties": {
+                                "type": "string"
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/missions/targets/{targetId}": {
+            "delete": {
+                "description": "Delete a target by its ID",
+                "tags": [
+                    "missions"
+                ],
+                "summary": "Delete target",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "Target ID",
+                        "name": "targetId",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Target deleted successfully",
+                        "schema": {
+                            "type": "object",
+                            "additionalProperties": {
+                                "type": "string"
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Bad request",
+                        "schema": {
+                            "type": "object",
+                            "additionalProperties": {
+                                "type": "string"
+                            }
+                        }
+                    }
+                }
+            },
+            "patch": {
+                "description": "Update target completion status and notes",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "missions"
+                ],
+                "summary": "Update target",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "Target ID",
+                        "name": "targetId",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "description": "Target update information",
+                        "name": "target",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/missions.UpdateTargetRequest"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Target updated successfully",
+                        "schema": {
+                            "type": "object",
+                            "additionalProperties": {
+                                "type": "string"
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Bad request",
+                        "schema": {
+                            "type": "object",
+                            "additionalProperties": {
+                                "type": "string"
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/missions/{id}": {
+            "get": {
+                "description": "Get a mission by its ID",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "missions"
+                ],
+                "summary": "Get a mission",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "Mission ID",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Mission information",
+                        "schema": {
+                            "$ref": "#/definitions/missions.Mission"
+                        }
+                    },
+                    "404": {
+                        "description": "Mission not found",
+                        "schema": {
+                            "type": "object",
+                            "additionalProperties": {
+                                "type": "string"
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Internal server error",
+                        "schema": {
+                            "type": "object",
+                            "additionalProperties": {
+                                "type": "string"
+                            }
+                        }
+                    }
+                }
+            },
+            "delete": {
+                "description": "Delete a mission by its ID",
+                "tags": [
+                    "missions"
+                ],
+                "summary": "Delete a mission",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "Mission ID",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Mission deleted successfully",
+                        "schema": {
+                            "type": "object",
+                            "additionalProperties": {
+                                "type": "string"
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Bad request",
+                        "schema": {
+                            "type": "object",
+                            "additionalProperties": {
+                                "type": "string"
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/missions/{id}/assign": {
+            "put": {
+                "description": "Assign a spy cat to a mission",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "missions"
+                ],
+                "summary": "Assign cat to mission",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "Mission ID",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "description": "Cat assignment information",
+                        "name": "request",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/missions.AssignCatRequest"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Cat assigned successfully",
+                        "schema": {
+                            "type": "object",
+                            "additionalProperties": {
+                                "type": "string"
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Bad request",
+                        "schema": {
+                            "type": "object",
+                            "additionalProperties": {
+                                "type": "string"
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Mission not found",
+                        "schema": {
+                            "type": "object",
+                            "additionalProperties": {
+                                "type": "string"
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Internal server error",
+                        "schema": {
+                            "type": "object",
+                            "additionalProperties": {
+                                "type": "string"
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/missions/{id}/complete": {
+            "patch": {
+                "description": "Mark a mission as complete by its ID",
+                "tags": [
+                    "missions"
+                ],
+                "summary": "Mark mission complete",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "Mission ID",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Mission marked complete",
+                        "schema": {
+                            "type": "object",
+                            "additionalProperties": {
+                                "type": "string"
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Mission not found",
+                        "schema": {
+                            "type": "object",
+                            "additionalProperties": {
+                                "type": "string"
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Internal server error",
+                        "schema": {
+                            "type": "object",
+                            "additionalProperties": {
+                                "type": "string"
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/missions/{id}/targets": {
+            "post": {
+                "description": "Add a new target to an existing mission",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "missions"
+                ],
+                "summary": "Add target to mission",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "Mission ID",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "description": "Target information",
+                        "name": "target",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/missions.CreateTarget"
+                        }
+                    }
+                ],
+                "responses": {
+                    "201": {
+                        "description": "Target added successfully",
+                        "schema": {
+                            "type": "object",
+                            "additionalProperties": {
+                                "type": "string"
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Bad request",
+                        "schema": {
+                            "type": "object",
+                            "additionalProperties": {
+                                "type": "string"
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    },
+    "definitions": {
+        "cats.Cat": {
+            "type": "object",
+            "properties": {
+                "breed": {
+                    "type": "string",
+                    "example": "Siamese"
+                },
+                "id": {
+                    "type": "integer",
+                    "example": 1
+                },
+                "name": {
+                    "type": "string",
+                    "example": "Whiskers"
+                },
+                "salary": {
+                    "type": "number",
+                    "example": 50000
+                },
+                "years_of_experience": {
+                    "type": "integer",
+                    "example": 5
+                }
+            }
+        },
+        "cats.CreateCatRequest": {
+            "type": "object",
+            "required": [
+                "breed",
+                "name",
+                "salary",
+                "years_of_experience"
+            ],
+            "properties": {
+                "breed": {
+                    "type": "string",
+                    "example": "Siamese"
+                },
+                "name": {
+                    "type": "string",
+                    "maxLength": 50,
+                    "minLength": 2,
+                    "example": "Whiskers"
+                },
+                "salary": {
+                    "type": "number",
+                    "minimum": 0,
+                    "example": 50000
+                },
+                "years_of_experience": {
+                    "type": "integer",
+                    "maximum": 50,
+                    "minimum": 0,
+                    "example": 5
+                }
+            }
+        },
+        "cats.UpdateSalaryRequest": {
+            "type": "object",
+            "required": [
+                "salary"
+            ],
+            "properties": {
+                "salary": {
+                    "type": "number",
+                    "minimum": 0,
+                    "example": 60000
+                }
+            }
+        },
+        "missions.AssignCatRequest": {
+            "type": "object",
+            "required": [
+                "cat_id"
+            ],
+            "properties": {
+                "cat_id": {
+                    "type": "integer",
+                    "example": 5
+                }
+            }
+        },
+        "missions.CreateMissionRequest": {
+            "type": "object",
+            "required": [
+                "name",
+                "targets"
+            ],
+            "properties": {
+                "cat_id": {
+                    "type": "integer",
+                    "example": 5
+                },
+                "is_complete": {
+                    "type": "boolean",
+                    "example": false
+                },
+                "name": {
+                    "type": "string",
+                    "example": "Operation Stealth"
+                },
+                "targets": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/missions.CreateTarget"
+                    }
+                }
+            }
+        },
+        "missions.CreateTarget": {
+            "type": "object",
+            "required": [
+                "country",
+                "name"
+            ],
+            "properties": {
+                "country": {
+                    "type": "string",
+                    "example": "Russia"
+                },
+                "is_complete": {
+                    "type": "boolean",
+                    "example": false
+                },
+                "name": {
+                    "type": "string",
+                    "example": "Agent Smith"
+                },
+                "notes": {
+                    "type": "string",
+                    "example": "High priority target"
+                }
+            }
+        },
+        "missions.Mission": {
+            "type": "object",
+            "properties": {
+                "cat_id": {
+                    "type": "integer",
+                    "example": 5
+                },
+                "id": {
+                    "type": "integer",
+                    "example": 1
+                },
+                "is_complete": {
+                    "type": "boolean",
+                    "example": false
+                },
+                "name": {
+                    "type": "string",
+                    "example": "Operation Stealth"
+                },
+                "targets": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/missions.Target"
+                    }
+                }
+            }
+        },
+        "missions.Target": {
+            "type": "object",
+            "properties": {
+                "country": {
+                    "type": "string",
+                    "example": "Russia"
+                },
+                "id": {
+                    "type": "integer",
+                    "example": 1
+                },
+                "is_complete": {
+                    "type": "boolean",
+                    "example": false
+                },
+                "mission_id": {
+                    "type": "integer",
+                    "example": 1
+                },
+                "name": {
+                    "type": "string",
+                    "example": "Agent Smith"
+                },
+                "notes": {
+                    "type": "string",
+                    "example": "High priority target"
+                }
+            }
+        },
+        "missions.UpdateTargetRequest": {
+            "type": "object",
+            "properties": {
+                "is_complete": {
+                    "type": "boolean",
+                    "example": true
+                },
+                "notes": {
+                    "type": "string",
+                    "example": "Mission accomplished"
+                }
+            }
+        }
+    }
+}

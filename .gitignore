@@ -1,2 +1,12 @@
 .env
 data/
+
+# Compiled binaries
+*.exe
+*.bin
+spy-cats-server
+spy-cats-server.exe
+
+# Go build artifacts
+dist/
+build/

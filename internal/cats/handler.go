@@ -26,6 +26,16 @@ func NewHandler(service CatService) *Handler {
 	return &Handler{service: service}
 }
 
+// CreateCat creates a new spy cat
+// @Summary      Create a spy cat
+// @Description  Create a new spy cat with the provided information
+// @Tags         cats
+// @Accept       json
+// @Produce      json
+// @Param        cat  body      CreateCatRequest  true  "Cat information"
+// @Success      201  {object}  map[string]int64  "Successfully created cat"
+// @Failure      400  {object}  map[string]string "Invalid input"
+// @Router       /cats [post]
 func (h *Handler) CreateCat(c *gin.Context) {
 	var req CreateCatRequest
 	if err := c.ShouldBindJSON(&req); err != nil {
@@ -42,6 +52,14 @@ func (h *Handler) CreateCat(c *gin.Context) {
 	c.JSON(http.StatusCreated, gin.H{"id": id})
 }
 
+// ListCats retrieves all spy cats
+// @Summary      List all spy cats
+// @Description  Get a list of all spy cats in the system
+// @Tags         cats
+// @Produce      json
+// @Success      200  {array}   Cat "List of cats"
+// @Failure      500  {object}  map[string]string "Internal server error"
+// @Router       /cats [get]
 func (h *Handler) ListCats(c *gin.Context) {
 	cats, err := h.service.GetAllCats()
 	if err != nil {
@@ -51,6 +69,16 @@ func (h *Handler) ListCats(c *gin.Context) {
 	c.JSON(http.StatusOK, cats)
 }
 
+// GetCat retrieves a specific spy cat by ID
+// @Summary      Get a spy cat
+// @Description  Get a spy cat by its ID
+// @Tags         cats
+// @Produce      json
+// @Param        id   path      int  true  "Cat ID"
+// @Success      200  {object}  Cat "Cat information"
+// @Failure      404  {object}  map[string]string "Cat not found"
+// @Failure      500  {object}  map[string]string "Internal server error"
+// @Router       /cats/{id} [get]
 func (h *Handler) GetCat(c *gin.Context) {
 	id, _ := strconv.ParseInt(c.Param("id"), 10, 64)
 	cat, err := h.service.GetCat(id)
@@ -65,6 +93,19 @@ func (h *Handler) GetCat(c *gin.Context) {
 	c.JSON(http.StatusOK, cat)
 }
 
+// UpdateSalary updates a spy cat's salary
+// @Summary      Update cat salary
+// @Description  Update the salary of a specific spy cat
+// @Tags         cats
+// @Accept       json
+// @Produce      json
+// @Param        id      path      int                  true  "Cat ID"
+// @Param        salary  body      UpdateSalaryRequest  true  "New salary information"
+// @Success      200     {object}  map[string]string    "Salary updated successfully"
+// @Failure      400     {object}  map[string]string    "Invalid input"
+// @Failure      404     {object}  map[string]string    "Cat not found"
+// @Failure      500     {object}  map[string]string    "Internal server error"
+// @Router       /cats/{id}/salary [patch]
 func (h *Handler) UpdateSalary(c *gin.Context) {
 	id, err := strconv.ParseInt(c.Param("id"), 10, 64)
 	if err != nil {
@@ -91,6 +132,14 @@ func (h *Handler) UpdateSalary(c *gin.Context) {
 	c.JSON(http.StatusOK, gin.H{"message": "salary updated successfully"})
 }
 
+// DeleteCat deletes a spy cat
+// @Summary      Delete a spy cat
+// @Description  Delete a spy cat by its ID
+// @Tags         cats
+// @Param        id  path      int  true  "Cat ID"
+// @Success      200 {object}  map[string]string "Cat deleted successfully"
+// @Failure      500 {object}  map[string]string "Internal server error"
+// @Router       /cats/{id} [delete]
 func (h *Handler) DeleteCat(c *gin.Context) {
 	id, _ := strconv.ParseInt(c.Param("id"), 10, 64)
 	if err := h.service.DeleteCat(id); err != nil {

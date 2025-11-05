@@ -1,0 +1,597 @@
+basePath: /api
+definitions:
+  cats.Cat:
+    properties:
+      breed:
+        example: Siamese
+        type: string
+      id:
+        example: 1
+        type: integer
+      name:
+        example: Whiskers
+        type: string
+      salary:
+        example: 50000
+        type: number
+      years_of_experience:
+        example: 5
+        type: integer
+    type: object
+  cats.CreateCatRequest:
+    properties:
+      breed:
+        example: Siamese
+        type: string
+      name:
+        example: Whiskers
+        maxLength: 50
+        minLength: 2
+        type: string
+      salary:
+        example: 50000
+        minimum: 0
+        type: number
+      years_of_experience:
+        example: 5
+        maximum: 50
+        minimum: 0
+        type: integer
+    required:
+    - breed
+    - name
+    - salary
+    - years_of_experience
+    type: object
+  cats.UpdateSalaryRequest:
+    properties:
+      salary:
+        example: 60000
+        minimum: 0
+        type: number
+    required:
+    - salary
+    type: object
+  missions.AssignCatRequest:
+    properties:
+      cat_id:
+        example: 5
+        type: integer
+    required:
+    - cat_id
+    type: object
+  missions.CreateMissionRequest:
+    properties:
+      cat_id:
+        example: 5
+        type: integer
+      is_complete:
+        example: false
+        type: boolean
+      name:
+        example: Operation Stealth
+        type: string
+      targets:
+        items:
+          $ref: '#/definitions/missions.CreateTarget'
+        type: array
+    required:
+    - name
+    - targets
+    type: object
+  missions.CreateTarget:
+    properties:
+      country:
+        example: Russia
+        type: string
+      is_complete:
+        example: false
+        type: boolean
+      name:
+        example: Agent Smith
+        type: string
+      notes:
+        example: High priority target
+        type: string
+    required:
+    - country
+    - name
+    type: object
+  missions.Mission:
+    properties:
+      cat_id:
+        example: 5
+        type: integer
+      id:
+        example: 1
+        type: integer
+      is_complete:
+        example: false
+        type: boolean
+      name:
+        example: Operation Stealth
+        type: string
+      targets:
+        items:
+          $ref: '#/definitions/missions.Target'
+        type: array
+    type: object
+  missions.Target:
+    properties:
+      country:
+        example: Russia
+        type: string
+      id:
+        example: 1
+        type: integer
+      is_complete:
+        example: false
+        type: boolean
+      mission_id:
+        example: 1
+        type: integer
+      name:
+        example: Agent Smith
+        type: string
+      notes:
+        example: High priority target
+        type: string
+    type: object
+  missions.UpdateTargetRequest:
+    properties:
+      is_complete:
+        example: true
+        type: boolean
+      notes:
+        example: Mission accomplished
+        type: string
+    type: object
+host: localhost:8080
+info:
+  contact:
+    email: support@swagger.io
+    name: API Support
+    url: http://www.swagger.io/support
+  description: A mission management system for spy cats
+  license:
+    name: MIT
+    url: http://opensource.org/licenses/MIT
+  termsOfService: http://swagger.io/terms/
+  title: Spy Cats API
+  version: "1.0"
+paths:
+  /cats:
+    get:
+      description: Get a list of all spy cats in the system
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: List of cats
+          schema:
+            items:
+              $ref: '#/definitions/cats.Cat'
+            type: array
+        "500":
+          description: Internal server error
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      summary: List all spy cats
+      tags:
+      - cats
+    post:
+      consumes:
+      - application/json
+      description: Create a new spy cat with the provided information
+      parameters:
+      - description: Cat information
+        in: body
+        name: cat
+        required: true
+        schema:
+          $ref: '#/definitions/cats.CreateCatRequest'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Successfully created cat
+          schema:
+            additionalProperties:
+              format: int64
+              type: integer
+            type: object
+        "400":
+          description: Invalid input
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      summary: Create a spy cat
+      tags:
+      - cats
+  /cats/{id}:
+    delete:
+      description: Delete a spy cat by its ID
+      parameters:
+      - description: Cat ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      responses:
+        "200":
+          description: Cat deleted successfully
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "500":
+          description: Internal server error
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      summary: Delete a spy cat
+      tags:
+      - cats
+    get:
+      description: Get a spy cat by its ID
+      parameters:
+      - description: Cat ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Cat information
+          schema:
+            $ref: '#/definitions/cats.Cat'
+        "404":
+          description: Cat not found
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "500":
+          description: Internal server error
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      summary: Get a spy cat
+      tags:
+      - cats
+  /cats/{id}/salary:
+    patch:
+      consumes:
+      - application/json
+      description: Update the salary of a specific spy cat
+      parameters:
+      - description: Cat ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      - description: New salary information
+        in: body
+        name: salary
+        required: true
+        schema:
+          $ref: '#/definitions/cats.UpdateSalaryRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Salary updated successfully
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "400":
+          description: Invalid input
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "404":
+          description: Cat not found
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "500":
+          description: Internal server error
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      summary: Update cat salary
+      tags:
+      - cats
+  /missions:
+    get:
+      description: Get a list of all missions in the system
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: List of missions
+          schema:
+            items:
+              $ref: '#/definitions/missions.Mission'
+            type: array
+        "500":
+          description: Internal server error
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      summary: List all missions
+      tags:
+      - missions
+    post:
+      consumes:
+      - application/json
+      description: Create a new mission with targets
+      parameters:
+      - description: Mission information
+        in: body
+        name: mission
+        required: true
+        schema:
+          $ref: '#/definitions/missions.CreateMissionRequest'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Successfully created mission
+          schema:
+            $ref: '#/definitions/missions.Mission'
+        "400":
+          description: Invalid input
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "500":
+          description: Internal server error
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      summary: Create a mission
+      tags:
+      - missions
+  /missions/{id}:
+    delete:
+      description: Delete a mission by its ID
+      parameters:
+      - description: Mission ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      responses:
+        "200":
+          description: Mission deleted successfully
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "400":
+          description: Bad request
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      summary: Delete a mission
+      tags:
+      - missions
+    get:
+      description: Get a mission by its ID
+      parameters:
+      - description: Mission ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Mission information
+          schema:
+            $ref: '#/definitions/missions.Mission'
+        "404":
+          description: Mission not found
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "500":
+          description: Internal server error
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      summary: Get a mission
+      tags:
+      - missions
+  /missions/{id}/assign:
+    put:
+      consumes:
+      - application/json
+      description: Assign a spy cat to a mission
+      parameters:
+      - description: Mission ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      - description: Cat assignment information
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/missions.AssignCatRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Cat assigned successfully
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "400":
+          description: Bad request
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "404":
+          description: Mission not found
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "500":
+          description: Internal server error
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      summary: Assign cat to mission
+      tags:
+      - missions
+  /missions/{id}/complete:
+    patch:
+      description: Mark a mission as complete by its ID
+      parameters:
+      - description: Mission ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      responses:
+        "200":
+          description: Mission marked complete
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "404":
+          description: Mission not found
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "500":
+          description: Internal server error
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      summary: Mark mission complete
+      tags:
+      - missions
+  /missions/{id}/targets:
+    post:
+      consumes:
+      - application/json
+      description: Add a new target to an existing mission
+      parameters:
+      - description: Mission ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      - description: Target information
+        in: body
+        name: target
+        required: true
+        schema:
+          $ref: '#/definitions/missions.CreateTarget'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Target added successfully
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "400":
+          description: Bad request
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      summary: Add target to mission
+      tags:
+      - missions
+  /missions/targets/{targetId}:
+    delete:
+      description: Delete a target by its ID
+      parameters:
+      - description: Target ID
+        in: path
+        name: targetId
+        required: true
+        type: integer
+      responses:
+        "200":
+          description: Target deleted successfully
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "400":
+          description: Bad request
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      summary: Delete target
+      tags:
+      - missions
+    patch:
+      consumes:
+      - application/json
+      description: Update target completion status and notes
+      parameters:
+      - description: Target ID
+        in: path
+        name: targetId
+        required: true
+        type: integer
+      - description: Target update information
+        in: body
+        name: target
+        required: true
+        schema:
+          $ref: '#/definitions/missions.UpdateTargetRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Target updated successfully
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "400":
+          description: Bad request
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      summary: Update target
+      tags:
+      - missions
+swagger: "2.0"
