@@ -4,6 +4,16 @@ This project now includes complete Swagger UI documentation for easy API testing
 
 ## 🚀 Getting Started
 
+### Prerequisites
+
+1. **Setup Environment Variables**
+   
+   Create a `.env` file in the project root directory:
+   ```bash
+   # Copy the example file
+   cp .env.example .env
+   ```
+
 ### Running the Server
 
 1. Build and run the server:
@@ -16,6 +26,7 @@ This project now includes complete Swagger UI documentation for easy API testing
    Server started on port 8080
    Swagger UI available at: http://localhost:8080/swagger/index.html
    ```
+
 
 ### Accessing Swagger UI
 
